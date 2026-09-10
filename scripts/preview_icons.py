@@ -2,22 +2,13 @@
 # ruff: noqa: E501
 """Generate preview.html with all icons rendered in every weight and style."""
 
-import os
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
-
-import django  # noqa: E402
-
-django.setup()
-
-from py_phosphor_icons.components.icon import Icon  # noqa: E402
-
-from py_phosphor_icons.svgs import icon_names  # noqa: E402
+from py_phosphor_icons import get_svg, icon_names  # noqa: E402
 
 WEIGHTS = ["regular", "thin", "light", "bold", "fill", "duotone"]
 STYLES = ["flat", "stroke"]
@@ -26,7 +17,7 @@ OUTPUT = ROOT / "docs" / "preview.html"
 
 def render_icon(name, weight, style):
     try:
-        return Icon.render(kwargs={"name": name, "weight": weight, "style": style})
+        return get_svg(name, weight, style)
     except FileNotFoundError:
         return '<svg viewBox="0 0 256 256" class="missing"><line x1="0" y1="0" x2="256" y2="256" stroke="red" stroke-width="16"/><line x1="256" y1="0" x2="0" y2="256" stroke="red" stroke-width="16"/></svg>'
 

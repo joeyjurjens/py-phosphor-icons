@@ -3,6 +3,8 @@
 [Phosphor Icons](https://phosphoricons.com/) for Python: the SVGs themselves, a
 loader, and search over the icon metadata. No framework, no dependencies.
 
+[Browse all icons →](https://joeyjurjens.github.io/py-phosphor-icons/preview.html)
+
 Framework integrations build on this package:
 
 - [djc-phosphor-icons](https://github.com/joeyjurjens/djc-phosphor-icons) for django-components
@@ -38,3 +40,11 @@ from py_phosphor_icons import Ranking, search_icons, set_ranking
 search_icons("home", ranking=MyRanking())
 set_ranking("myapp.ranking.MyRanking")  # a class or a dotted path
 ```
+
+<!-- known-issues-start -->
+## Known Icon Issues
+
+The following icons are incomplete in the upstream Phosphor release and will fail to render in certain combinations:
+
+- **book-user**: missing from `stroke/light`, `stroke/bold`, `stroke/fill`, `stroke/duotone`
+<!-- known-issues-end -->
