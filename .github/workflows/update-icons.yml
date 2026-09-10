@@ -1,0 +1,64 @@
+name: Update Icons
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_TOKEN_DJC_PHOSPHOR_ICONS }}
+
+      - uses: astral-sh/setup-uv@v6
+
+      - run: uv sync
+
+      - name: Check for new icons
+        id: check
+        run: uv run python scripts/check_new_icons.py
+
+      - name: Download updated icons
+        if: steps.check.outputs.has_new == 'true'
+        run: uv run python scripts/download_icons.py ${{ steps.check.outputs.new_version }}
+
+      - name: Regenerate preview
+        if: steps.check.outputs.has_new == 'true'
+        run: uv run python scripts/preview_icons.py
+
+      # Always: tags and categories are edited upstream between icon releases.
+      - name: Download metadata
+        run: uv run python scripts/download_metadata.py
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- src/ docs/ README.md; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version
+        id: version
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          uv version --bump patch
+          echo "new_version=$(uv version --short)" >> $GITHUB_OUTPUT
+
+      - name: Commit and tag
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/py_phosphor_icons/svgs/ src/py_phosphor_icons/search/metadata.json src/py_phosphor_icons/phosphor_version.txt pyproject.toml uv.lock README.md docs/preview.html
+          git commit -m "chore: sync with phosphor $(cat src/py_phosphor_icons/phosphor_version.txt)"
+          git tag "v${{ steps.version.outputs.new_version }}"
+          git push && git push --tags

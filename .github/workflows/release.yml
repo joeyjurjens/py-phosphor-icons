@@ -1,0 +1,35 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g. v0.0.1)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get Phosphor version
+        id: phosphor
+        run: echo "version=$(cat src/py_phosphor_icons/phosphor_version.txt)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=${{ github.ref_name != 'master' && github.ref_name || inputs.tag }}
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --draft \
+            --notes "Synced with [Phosphor Icons ${{ steps.phosphor.outputs.version }}](https://github.com/phosphor-icons/homepage/releases/tag/${{ steps.phosphor.outputs.version }})."
