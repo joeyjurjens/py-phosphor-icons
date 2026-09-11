@@ -1,7 +1,6 @@
 # py-phosphor-icons
 
-[Phosphor Icons](https://phosphoricons.com/) for Python: the SVGs themselves, a
-loader, and search over the icon metadata. No framework, no dependencies.
+[Phosphor Icons](https://phosphoricons.com/) for Python: the SVGs themselves, a loader, and search over the icon metadata. No framework, no dependencies.
 
 [Browse all icons →](https://joeyjurjens.github.io/py-phosphor-icons/preview.html)
 
@@ -26,9 +25,7 @@ get_svg_inner("house", "bold")  # just its contents
 search_icons("home")  # ranked IconEntry results
 ```
 
-Weights are `thin`, `light`, `regular`, `bold`, `fill` and `duotone`; styles are
-`flat` and `stroke`. An unknown name raises `FileNotFoundError` with the closest
-matches suggested.
+Weights are `thin`, `light`, `regular`, `bold`, `fill` and `duotone`; styles are `flat` and `stroke`. An unknown name raises `FileNotFoundError` with the closest matches suggested.
 
 ## Ranking
 
