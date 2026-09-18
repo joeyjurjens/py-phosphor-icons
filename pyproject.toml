@@ -1,17 +1,19 @@
 [project]
 name = "py-phosphor-icons"
-version = "0.1.0"
+version = "0.1.1"
 description = "Phosphor Icons for Python: the SVGs, a loader, and search over them"
 readme = "README.md"
 authors = [
     { name = "Joey Jurjens", email = "joeyjurjens@gmail.com" }
 ]
 requires-python = ">=3.10"
+license-files = ["LICENSE"]
 dependencies = []
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
 ]
 keywords = ["phosphor", "icons", "svg"]
 
